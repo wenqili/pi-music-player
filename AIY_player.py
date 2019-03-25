@@ -4,8 +4,10 @@ import time
 import aiy.voice.tts
 from aiy.board import Board, Led
 import subprocess
+import os
 
-FILE_PATH = './track.mp3'
+FILE_PATH = '/home/pi/music_player/track.mp3'
+
 
 class MediaPlayer():
     def __init__(self):
@@ -31,6 +33,7 @@ class MediaPlayer():
         self.process.stdin.write(b'-')
         self.process.stdin.flush()
 
+
 if __name__ == '__main__':
     try:
         print("waiting for guesture")
@@ -50,16 +53,18 @@ if __name__ == '__main__':
                 board.button.wait_for_release()
                 board.led.state = Led.OFF
                 counter = counter + 1
-                print("button pressed, and now counter = ", counter, timeGap)
-
                 releaseTime = time.time()
                 timeGap = releaseTime - startTime
+                print("button pressed, and now counter = ", counter, timeGap)
 
-                if (timeGap > 2 and toggle == False):
+                if (timeGap > 2 and toggle == False and timeGap <= 6):
                     player.play(FILE_PATH)
                     toggle = True
                     counter = 0
                     print("palyer start")
+                elif (timeGap > 6):
+                    aiy.voice.tts.say("Good bye")
+                    subprocess.call('sudo shutdown now', shell=True)
 
                 elif (timeGap > 2 and toggle == True):
                     player.stop()
