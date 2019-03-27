@@ -1,4 +1,4 @@
-# pi-music-player-with-distance-control
+# pi-music-player
 
 ### Hacking google AIY kit
 
